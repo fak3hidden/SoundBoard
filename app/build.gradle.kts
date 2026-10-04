@@ -67,6 +67,15 @@ android {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
 
+    lint {
+        // Print the full report into the build log so CI (and anyone without
+        // the HTML report) can see exactly which issue failed the build.
+        textReport = true
+        textOutput = file("stdout")
+        abortOnError = true
+        checkReleaseBuilds = true
+    }
+
     packaging {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }

@@ -62,7 +62,7 @@ jobs:
             echo "## Compile failed"
             echo
             echo '```'
-            grep -E "^(e:|w:|FAILURE:|\* What went wrong|\* Where|Caused by:|> )" /tmp/build.log \
+            grep -E "^(e:|w:|FAILURE:|\* What went wrong|\* Where|Caused by:|> )|Error:|Warning:" /tmp/build.log \
               | grep -vE "^> Task |^> Run with|^> Get more help" \
               | head -150 || true
             echo '```'
