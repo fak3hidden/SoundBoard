@@ -11,6 +11,8 @@ jobs:
     name: Compile APK
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: write   # needed to post the compiler output as a commit comment
 
     steps:
       - uses: actions/checkout@v4
@@ -69,9 +71,11 @@ jobs:
             echo "</details>"
           } > /tmp/comment.md
           cat /tmp/comment.md >> "$GITHUB_STEP_SUMMARY"
+          jq -Rs '{body: .}' < /tmp/comment.md > /tmp/comment.json
           gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" \
-            -F body=@/tmp/comment.md > /dev/null
-          echo "compiler output posted as a commit comment"
+            --input /tmp/comment.json > /dev/null \
+            && echo "compiler output posted as a commit comment" \
+            || echo "could not post commit comment; see the job summary instead"
 
       - name: Lint
         run: ./gradlew --no-daemon lintRelease || true
