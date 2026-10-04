@@ -5,6 +5,9 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+echo "== pre-flight check =="
+python3 tools/precompile.py
+
 echo "== building =="
 ./gradlew assembleRelease
 

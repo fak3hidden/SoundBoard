@@ -126,6 +126,8 @@ app/
     web/           phone/PC control panel
     magisk-module/ the virtual-mic module, installed from inside the app
 tools/
+  precompile.py        pre-flight checker (no JDK needed) + --self-test
+  setup-toolchain.sh   installs JDK 17 + Android SDK + Gradle, then builds
   install.sh           build + sideload + push clips
   build-module-zip.sh  flashable zip for Magisk Manager
   mock_panel.py        offline preview of the web UI
@@ -136,7 +138,48 @@ docs/
 
 ## Building
 
+### Pre-flight checker (no JDK, no SDK, no network)
+
+```bash
+python3 tools/precompile.py
+```
+
+A real Gradle build needs a JDK, the Android SDK and Maven access. This script
+needs none of it — it parses the Kotlin itself and catches the mistakes that
+otherwise only surface minutes into a build:
+
+| Code | Catches |
+|---|---|
+| `E-BALANCE` | unbalanced braces/parens, unterminated string literals |
+| `E-PKG` | `package` not matching the directory |
+| `E-IMPORT` | project imports that resolve to nothing |
+| `E-DEP` | imports with no Gradle dependency behind them |
+| `E-HIDDENAPI` | hidden `@SystemApi` packages/members used without reflection |
+| `E-JVMCLASH` | `var x` + `fun setX()` platform declaration clashes |
+| `E-RES` | missing `R.*` and `@drawable/@string` references |
+| `E-MANIFEST` | manifest classes with no source, missing permissions |
+| `E-ASSET` | assets opened in code but not shipped |
+| `E-API` / `E-DOM` | web panel calling endpoints or element ids that don't exist |
+| `E-XML` `E-SH` `E-JS` `E-PY` | sidecar syntax errors |
+
+It exits non-zero on errors, so `tools/install.sh` and `tools/setup-toolchain.sh`
+run it before invoking Gradle. `--json` for machine output, `--strict` to fail
+on warnings too.
+
+Because a checker nobody tested is just a script that prints "OK":
+
+```bash
+python3 tools/precompile.py --self-test
+```
+
+injects 12 known faults into throwaway copies of the tree and asserts that each
+diagnostic actually fires.
+
+### The real build
+
 Needs JDK 17 and the Android SDK (API 34 + build-tools 34).
+`tools/setup-toolchain.sh` installs all of it, generates the wrapper and the
+keystore, and runs the first build. Or by hand:
 
 ```bash
 gradle wrapper          # first time only, to generate gradlew

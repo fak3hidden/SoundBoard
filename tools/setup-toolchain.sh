@@ -140,6 +140,9 @@ setup_android_sdk
 setup_gradle
 setup_keystore
 
+step "Pre-flight check"
+python3 "$ROOT/tools/precompile.py"
+
 step "Building"
 cd "$ROOT"
 ANDROID_SDK_ROOT="$ANDROID_SDK_ROOT" ANDROID_HOME="$ANDROID_SDK_ROOT" \

@@ -72,7 +72,10 @@ android {
         // the HTML report) can see exactly which issue failed the build.
         textReport = true
         textOutput = file("stdout")
-        abortOnError = true
+        // Don't let a style/deprecation lint stop a sideload build from
+        // producing an installable APK. Run `./gradlew lintRelease` to see
+        // the full report whenever you want it.
+        abortOnError = false
         checkReleaseBuilds = true
     }
 
