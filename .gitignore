@@ -22,3 +22,6 @@ output.json
 # Build artefacts
 dist/
 *.zip
+
+# Local toolchain
+.toolchain/

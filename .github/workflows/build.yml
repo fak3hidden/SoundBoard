@@ -44,7 +44,34 @@ jobs:
         run: gradle wrapper --gradle-version 8.7
 
       - name: Compile (Kotlin + resources)
-        run: ./gradlew --no-daemon --stacktrace assembleRelease
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace assembleRelease 2>&1 | tee /tmp/build.log
+
+      - name: Publish compiler output
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo "## Compile failed"
+            echo
+            echo '```'
+            grep -E "^(e:|w:|FAILURE:|\* What went wrong|\* Where|Caused by:|> )" /tmp/build.log \
+              | head -150 || true
+            echo '```'
+            echo
+            echo "<details><summary>last 120 lines</summary>"
+            echo
+            echo '```'
+            tail -120 /tmp/build.log
+            echo '```'
+            echo "</details>"
+          } > /tmp/comment.md
+          cat /tmp/comment.md >> "$GITHUB_STEP_SUMMARY"
+          gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" \
+            -F body=@/tmp/comment.md > /dev/null
+          echo "compiler output posted as a commit comment"
 
       - name: Lint
         run: ./gradlew --no-daemon lintRelease || true
