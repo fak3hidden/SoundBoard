@@ -5,9 +5,7 @@ import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.util.Log
 import java.io.File
-import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import java.nio.ShortBuffer
 
 /**
  * Decodes any container/codec the headset supports (mp3, ogg/vorbis, opus,

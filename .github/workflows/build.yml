@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Pre-flight check (no JDK needed)
+        run: python3 tools/precompile.py
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -119,6 +122,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Pre-flight self-test
+        run: python3 tools/precompile.py --self-test
 
       - name: Syntax-check web panel
         run: node --check app/src/main/assets/web/app.js

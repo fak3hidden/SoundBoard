@@ -79,7 +79,11 @@ class SoundboardEngine(
     private var monitorTrack: AudioTrack? = null
     private var acousticTrack: AudioTrack? = null
 
+    // Private setter: the JVM setter for a public `var route` would be
+    // setRoute(Route), which collides with the switchRoute() entry point.
     @Volatile var route: Route = Route.MIC_AND_MONITOR
+        private set
+
     @Volatile var masterVolume: Float = 0.9f
     @Volatile var monitorVolume: Float = 0.6f
 
@@ -118,7 +122,7 @@ class SoundboardEngine(
 
     /** Re-opens output tracks for the new route. */
     @Synchronized
-    fun setRoute(newRoute: Route) {
+    fun switchRoute(newRoute: Route) {
         if (route == newRoute) return
         route = newRoute
         if (running.get()) {

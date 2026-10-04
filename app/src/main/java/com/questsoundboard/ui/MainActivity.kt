@@ -158,19 +158,19 @@ fun SoundboardScreen(container: AppContainer, activity: MainActivity) {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     RouteOption("Mic + Me", "Teammates hear it, you hear it too",
                         Route.MIC_AND_MONITOR, route, rootStatus.canInjectMic) {
-                        route = it; container.engine.setRoute(it); container.settings.route = it.name
+                        route = it; container.engine.switchRoute(it); container.settings.route = it.name
                     }
                     RouteOption("Mic only", "Only the game/voice chat hears it",
                         Route.MIC, route, rootStatus.canInjectMic) {
-                        route = it; container.engine.setRoute(it); container.settings.route = it.name
+                        route = it; container.engine.switchRoute(it); container.settings.route = it.name
                     }
                     RouteOption("Me only", "Private — nothing leaves the headset",
                         Route.MONITOR, route, true) {
-                        route = it; container.engine.setRoute(it); container.settings.route = it.name
+                        route = it; container.engine.switchRoute(it); container.settings.route = it.name
                     }
                     RouteOption("Acoustic", "Play out loud so the real mic catches it (no root)",
                         Route.ACOUSTIC, route, true) {
-                        route = it; container.engine.setRoute(it); container.settings.route = it.name
+                        route = it; container.engine.switchRoute(it); container.settings.route = it.name
                     }
                 }
 

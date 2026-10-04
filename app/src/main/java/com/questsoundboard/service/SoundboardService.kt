@@ -105,7 +105,7 @@ class SoundboardService : Service() {
 
         engine.masterVolume = settings.masterVolume
         engine.monitorVolume = settings.monitorVolume
-        engine.setRoute(runCatching { Route.valueOf(settings.route) }.getOrDefault(Route.MIC_AND_MONITOR))
+        engine.switchRoute(runCatching { Route.valueOf(settings.route) }.getOrDefault(Route.MIC_AND_MONITOR))
         engine.start()
 
         val sounds = container.library.scan()

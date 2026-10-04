@@ -192,7 +192,7 @@ class ControlServer(
                 val value = q["value"] ?: return error("missing value")
                 val newRoute = runCatching { Route.valueOf(value) }.getOrNull()
                     ?: return error("bad route $value")
-                engine.setRoute(newRoute)
+                engine.switchRoute(newRoute)
                 settings.route = engine.route.name
                 ok(JSONObject().put("route", engine.route.name))
             }
