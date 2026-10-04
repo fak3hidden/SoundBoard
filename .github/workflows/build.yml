@@ -73,6 +73,16 @@ jobs:
             tail -120 /tmp/build.log
             echo '```'
             echo "</details>"
+            for report in app/build/reports/lint-results-*.txt; do
+              [ -f "$report" ] || continue
+              echo
+              echo "<details><summary>$(basename "$report")</summary>"
+              echo
+              echo '```'
+              head -120 "$report"
+              echo '```'
+              echo "</details>"
+            done
           } > /tmp/comment.md
           cat /tmp/comment.md >> "$GITHUB_STEP_SUMMARY"
           jq -Rs '{body: .}' < /tmp/comment.md > /tmp/comment.json

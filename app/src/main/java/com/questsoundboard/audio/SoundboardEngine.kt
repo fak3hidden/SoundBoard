@@ -156,6 +156,9 @@ class SoundboardEngine(
             try {
                 val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                 am.mode = AudioManager.MODE_IN_COMMUNICATION
+                // setCommunicationDevice() replaces this on API 31+, but Quest 1
+                // is API 29 and the headset speaker is the default anyway.
+                @Suppress("DEPRECATION")
                 am.isSpeakerphoneOn = true
             } catch (_: Exception) {}
         }

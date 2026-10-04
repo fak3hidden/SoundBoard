@@ -176,7 +176,7 @@ fun SoundboardScreen(container: AppContainer, activity: MainActivity) {
 
                 val url = SoundboardService.controlServer?.panelUrl()
                 if (serviceRunning && url != null) {
-                    Divider(color = Color(0xFF262C42))
+                    HorizontalDivider(color = Color(0xFF262C42))
                     Text("Phone / PC control panel", fontSize = 13.sp, color = Color(0xFF8D97B5))
                     Text(url, fontSize = 19.sp, fontWeight = FontWeight.Bold,
                         color = Color(0xFF00D2FF))
