@@ -22,13 +22,17 @@ android {
         }
     }
 
-    signingConfigs {
-        create("sideload") {
-            // Debug-style key so the APK can be sideloaded with adb install.
-            storeFile = file("sideload.keystore")
-            storePassword = "soundboard"
-            keyAlias = "soundboard"
-            keyPassword = "soundboard"
+    // Only register a signing config if the throwaway sideload keystore is
+    // actually present, otherwise a fresh clone fails at configuration time.
+    val sideloadKeystore = file("sideload.keystore")
+    if (sideloadKeystore.exists()) {
+        signingConfigs {
+            create("sideload") {
+                storeFile = sideloadKeystore
+                storePassword = System.getenv("SIDELOAD_STORE_PASSWORD") ?: "soundboard"
+                keyAlias = System.getenv("SIDELOAD_KEY_ALIAS") ?: "soundboard"
+                keyPassword = System.getenv("SIDELOAD_KEY_PASSWORD") ?: "soundboard"
+            }
         }
     }
 
@@ -36,7 +40,10 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // Falls back to the debug key when no sideload keystore exists, so
+            // `assembleRelease` always produces an installable APK.
             signingConfig = signingConfigs.findByName("sideload")
+                ?: signingConfigs.getByName("debug")
         }
         debug {
             applicationIdSuffix = ".debug"
