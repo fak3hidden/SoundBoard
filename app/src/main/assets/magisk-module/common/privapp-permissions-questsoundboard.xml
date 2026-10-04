@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Allowlists the signature|privileged permissions the soundboard needs once it
+  lives in /system/priv-app. Without this file Android boots the app with the
+  permissions silently denied (or, on some builds, refuses to boot the app).
+-->
+<permissions>
+    <privapp-permissions package="com.questsoundboard">
+        <permission name="android.permission.MODIFY_AUDIO_ROUTING" />
+        <permission name="android.permission.CAPTURE_AUDIO_OUTPUT" />
+        <permission name="android.permission.MODIFY_PHONE_STATE" />
+        <permission name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    </privapp-permissions>
+</permissions>

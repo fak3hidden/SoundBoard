@@ -1,0 +1,6 @@
+id=questsoundboard_vmic
+name=Quest Soundboard Virtual Mic
+version=1.0.0
+versionCode=1
+author=Quest Soundboard
+description=Grants Quest Soundboard privileged audio routing so it can inject audio into the microphone capture path of any game.

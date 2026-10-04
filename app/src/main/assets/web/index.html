@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0b0d14" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>Quest Soundboard</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <div class="brand-text">
+      <h1>Quest Soundboard</h1>
+      <p id="deviceLine">connecting…</p>
+    </div>
+  </div>
+
+  <div class="status-cluster">
+    <div class="chip" id="rootChip" title="Privilege tier">
+      <i class="dot"></i><span>root: …</span>
+    </div>
+    <div class="chip" id="micChip" title="Microphone injection state">
+      <i class="dot"></i><span>mic: …</span>
+    </div>
+    <div class="meter" title="Output level">
+      <div class="meter-fill" id="meterFill"></div>
+    </div>
+  </div>
+</header>
+
+<nav class="routebar">
+  <div class="route-group" role="group" aria-label="Output routing">
+    <button class="route" data-route="MIC_AND_MONITOR">
+      <strong>Mic + Me</strong><small>everyone hears it</small>
+    </button>
+    <button class="route" data-route="MIC">
+      <strong>Mic only</strong><small>you stay silent</small>
+    </button>
+    <button class="route" data-route="MONITOR">
+      <strong>Me only</strong><small>private test</small>
+    </button>
+    <button class="route" data-route="ACOUSTIC">
+      <strong>Acoustic</strong><small>no root needed</small>
+    </button>
+  </div>
+
+  <div class="sliders">
+    <label>Master
+      <input type="range" id="master" min="0" max="150" value="90" />
+      <output id="masterOut">90%</output>
+    </label>
+    <label>Monitor
+      <input type="range" id="monitor" min="0" max="150" value="60" />
+      <output id="monitorOut">60%</output>
+    </label>
+  </div>
+
+  <button class="panic" id="panic" title="Stop everything (left stick click in VR)">
+    PANIC STOP
+  </button>
+</nav>
+
+<main>
+  <section class="toolbar">
+    <div class="tabs" id="tabs"></div>
+    <div class="tools">
+      <input type="search" id="search" placeholder="Search clips…" autocomplete="off" />
+      <button class="ghost" id="rescan">Rescan</button>
+      <label class="ghost upload">
+        Add files
+        <input type="file" id="fileInput" multiple accept="audio/*" hidden />
+      </label>
+    </div>
+  </section>
+
+  <section id="banner" class="banner hidden"></section>
+
+  <section class="grid" id="grid"></section>
+
+  <section class="empty hidden" id="empty">
+    <h2>No clips yet</h2>
+    <p>Drop your own audio into <code>/sdcard/Soundboard/</code> on the headset.
+       Sub-folders become the tabs above.</p>
+    <pre>adb push airhorn.mp3 /sdcard/Soundboard/Memes/</pre>
+    <p>Or drag files anywhere onto this page to upload them straight to the headset.</p>
+  </section>
+</main>
+
+<aside class="nowplaying" id="nowPlaying"></aside>
+
+<div class="dropzone" id="dropzone"><div>Drop audio to upload to the headset</div></div>
+
+<dialog id="editor">
+  <form method="dialog">
+    <h2 id="editName">Clip</h2>
+    <label>Volume <input type="range" id="editVolume" min="0" max="150" /> <output id="editVolumeOut"></output></label>
+    <label class="row"><input type="checkbox" id="editLoop" /> Loop until stopped</label>
+    <label>Pad slot <input type="number" id="editPad" min="0" max="99" /></label>
+    <label>Controller hotkey
+      <div class="row">
+        <input type="text" id="editHotkey" placeholder="none" readonly />
+        <button type="button" class="ghost" id="captureKey">Press a button…</button>
+      </div>
+    </label>
+    <p class="hint" id="hotkeyHint">Global hotkeys need root — they fire even while a game has focus.</p>
+    <menu>
+      <button value="cancel" class="ghost">Close</button>
+      <button value="delete" id="deleteSound" class="danger">Delete file</button>
+      <button value="save" id="saveSound" class="primary">Save</button>
+    </menu>
+  </form>
+</dialog>
+
+<script src="/app.js"></script>
+</body>
+</html>
