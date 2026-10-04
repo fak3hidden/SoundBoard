@@ -24,6 +24,9 @@ class MicInjector(private val context: Context) {
 
     companion object {
         private const val TAG = "MicInjector"
+
+        /** android.media.AudioManager.SUCCESS — hidden @SystemApi constant. */
+        private const val AUDIO_MANAGER_SUCCESS = 0
     }
 
     enum class State { IDLE, ACTIVE, UNAVAILABLE }
@@ -108,8 +111,10 @@ class MicInjector(private val context: Context) {
             val registerMethod = AudioManager::class.java.getMethod(
                 "registerAudioPolicy", policyCls
             )
+            // AudioManager.SUCCESS is @SystemApi so it is not on the compile
+            // classpath; it is 0, and ERROR is -1.
             val result = registerMethod.invoke(audioManager, policy) as Int
-            if (result != AudioManager.SUCCESS) {
+            if (result != AUDIO_MANAGER_SUCCESS) {
                 fail("registerAudioPolicy returned $result (missing MODIFY_AUDIO_ROUTING?)")
                 return false
             }
